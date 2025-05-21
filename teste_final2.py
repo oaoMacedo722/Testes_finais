@@ -5,7 +5,17 @@
 # é 10% se superior a 500 é 15%. 
 # O programa deve validar todas as entradas e na listagem deve parar cliente a cliente e ser possível busca direta por número de cliente. 
 # O programa deve conter (Estruturas 3v, funções 5v, Vetores 4v, apontadores 3v). -> v = valores (nota)
-import os 
+import os
+import sys
+
+clientes = []
+
+def quit(): 
+    print("ADEUS !")
+    sys.exit()
+
+def clear():
+    os.system("cls")
 
 def Desconto(compra):
     if 100 < compra < 200: 
@@ -13,48 +23,120 @@ def Desconto(compra):
         divfinal = compra - desc 
         print(f"O desconto é de {desc}€")
         print(f"A divida final é de {divfinal}€")
+        return desc
 
-    elif 200 < compra < 500 : 
+    elif 200 < compra < 500: 
         desc = compra * 0.1
         divfinal = compra - desc
         print(f"O desconto é de {desc}€")
         print(f"A divida final é de {divfinal}€")
+        return desc
 
-    elif compra >500:
-        desc = compra* 0.15
+    elif compra > 500:
+        desc = compra * 0.15
         divfinal = compra - desc
         print(f"O desconto é de {desc}€")
         print(f"A divida final é de {divfinal}€")
+        return desc
 
-clientes = []
-numcli = 0
+    return 0  # Caso não se enquadre em nenhum critério, o desconto é 0
 
-print ("---Cliente---")
-nome = input("Escreva o seu nome: ")
-morada = input("Escreva a sua morada: ")
-try:
-    tel = int(input("Escreve o seu numero de telefone: "))
-except ValueError:
-    print("Escreva um numero")
-    continue
+def registar_clientes():
+    
+    numcli = 0
 
-try:
-    compra = int(input("Escreva o valor da sua compra: "))
-except ValueError:
-    print("Escreva um numero")
+    while True:
+        print("---Cliente---")
+        nome = input("Escreva o seu nome: ")
+        morada = input("Escreva a sua morada: ")
+        while True:
+            try:
+                tel = int(input("Escreve o seu numero de telefone: "))
+                break
+            except ValueError:
+                print("Escreva um numero")
+                continue
+        while True:
+            try:
+                nif = int(input("Escreve o seu NIF: "))
+                break
+            except ValueError:
+                print("Escreva um numero")
+                continue
+        while True:
+            try:
+                compra = float(input("Escreva o valor da sua compra: "))
+                break
+            except ValueError:
+                print("Escreva um numero")
+                continue
+
+        desconto = Desconto(compra)  
+
+        cliente = {
+            "Numcli": numcli,
+            "Nome": nome,
+            "Morada" : morada, 
+            "Tel" : tel,
+            "Nif": nif,
+            "Compra" : compra,
+            "Desconto" : desconto  
+        }
+
+        clientes.append(cliente)
+        clear()
+        print(f"Numero - {cliente['Numcli']}")
+        print(f"Nome - {cliente['Nome']}")
+        print(f"Morada - {cliente['Morada']}")
+        print(f"Telefone - {cliente['Tel']}")
+        print(f"NIF - {cliente['Nif']}")
+        print(f"Compra - {cliente['Compra']}")
+        print(f"Desconto - {cliente['Desconto']}")  # O valor do desconto será impresso corretamente
+        numcli += 1 
+        return
+
+def procurar():
+    try:
+        print("Escreva o Id do cliente: ")
+        escolha=int(input(">> "))
+        
+        if not clientes: 
+            print("nao ha clientes na lista")
+
+        cliente = clientes[escolha - 1 ]
+
+        print(f"Numero - {cliente['Numcli']}")
+        print(f"Nome - {cliente['Nome']}")
+        print(f"Morada - {cliente['Morada']}")
+        print(f"Telefone - {cliente['Tel']}")
+        print(f"NIF - {cliente['Nif']}")
+        print(f"Compra - {cliente['Compra']}")
+        print(f"Desconto - {cliente['Desconto']}")
+
+    except ValueError:
+        print("Escreva um numero")
 
 
+    
 
-cliente = {
-    "Numcli": numcli,
-    "Nome": nome,
-    "Morada" : morada, 
-    "Tel" : tel,
-    "Compra" : compra,
-    "Desconto" : Desconto(compra)
+def menu():
+    while True:
+        try:
+            print("-- MENU --")
+            print("1 - Registar cliente")
+            print("2 - Procurar clientes")
+            print("3 - Sair")
+            escolha = int(input(">> "))
+        except ValueError: 
+            print("Escreva uma escolha valida")
+            continue
+        
+        if escolha == 1: 
+            registar_clientes()
+        elif escolha == 2:
+            procurar()
+        elif escolha == 3:
+            quit()
 
-}
 
-clientes.append(cliente)
-print(f"Numero - {cliente['Numcli']}")
-numcli += 1 
+menu()
